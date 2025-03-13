@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.database.config import database
-from app.routers import restful_endpoints, rest_endpoints
+from app.routers import restful_endpoints
 
 API_VERSION = "v1"
 
@@ -13,7 +13,6 @@ app = FastAPI(
 )
 
 app.include_router(restful_endpoints.router)
-app.include_router(rest_endpoints.router)
 
 @app.on_event("startup")
 async def startup():
