@@ -26,6 +26,10 @@ services:
       dockerfile: docker/Dockerfile.dev
     volumes:
       - ..:/app
+      - /app/venv
+      - /app/.git
+      - /app/.vscode
+      - /app/.idea
     ports:
       - 8000:8000
     environment:

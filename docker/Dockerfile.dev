@@ -25,6 +25,7 @@ RUN pip install sqlparse
 RUN pip install --upgrade pip
 RUN pip install "pydantic[dotenv]"
 RUN pip install -r requirements.txt
+RUN pip install watchfiles
 
 # copy project
 COPY app/ /app/
