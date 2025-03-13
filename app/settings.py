@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings(BaseSettings):
-    postgres_user: str = Field(os.environ.get('POSTGRES_USER', 'test_user'))
-    postgres_password: str = Field(os.environ.get('POSTGRES_PASSWORD', 'test_password'))
-    postgres_db: str = Field(os.environ.get('POSTGRES_DB', 'test_db'))
+    postgres_user: str = Field(os.environ.get('POSTGRES_USER', 'paracas'))
+    postgres_password: str = Field(os.environ.get('POSTGRES_PASSWORD', 'paracas2024'))
+    postgres_db: str = Field(os.environ.get('POSTGRES_DB', 'payment_service'))
     postgres_host: str = Field(os.environ.get('POSTGRES_HOST', 'db'))
     postgres_port: str = Field(os.environ.get('POSTGRES_PORT', '5432'))
 

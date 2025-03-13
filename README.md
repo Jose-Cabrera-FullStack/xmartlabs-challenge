@@ -37,7 +37,7 @@ The project uses environment variables to configure the application. The environ
 
 ```bash
 # .env
-DATABASE_URL=postgresql://paracas:paracas@db:5432/payment_service
+DATABASE_URL=postgresql://paracas:paracas2024@db:5432/payment_service
 ...
 ```
 
