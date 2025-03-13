@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Waiting for database to be ready..."
-until pg_isready -h db -p 5432 -U paracas
+until pg_isready -h db -p 5432 -U app
 do
     echo "Database is not ready - sleeping"
     sleep 2
