@@ -38,21 +38,6 @@ services:
       db:
         condition: service_healthy
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
-    ports:
-      - 5050:80
-    volumes:
-      - ./servers.json:/pgadmin4/pgservers.json
-      - ./pgpass:/pgpass
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - db
-
 volumes:
   postgres_data:
   pgadmin-data:

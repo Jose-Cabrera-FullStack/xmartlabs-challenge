@@ -31,10 +31,8 @@ RUN pip install watchfiles
 COPY app/ /app/
 COPY requirements.txt /app/
 COPY alembic.ini /app/
-COPY pgpass /app/
 COPY pytest.ini /app/
 COPY setup.cfg /app/
-COPY pgservers.json /app/
 COPY alembic /app/
 COPY docker/docker-compose.yml /app/
 COPY pylintrc /app/
