@@ -2,6 +2,7 @@ from unittest.mock import patch
 import sqlalchemy
 from app.database import config
 
+
 def test_database_connection_success():
     with patch("app.database.config.settings") as mock_settings:
         mock_settings.db_url = "sqlite:///test.db"

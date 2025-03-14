@@ -1,6 +1,9 @@
 from unittest.mock import patch
-from app.infrastructure.s3 import generate_presigned_url
+
 import pytest
+
+from app.infrastructure.s3 import generate_presigned_url
+
 
 def test_generate_presigned_url():
     with patch("app.infrastructure.s3.boto3.client") as mock_boto3_client:
@@ -29,6 +32,7 @@ def test_generate_presigned_url():
             ],
             ExpiresIn=3600,
         )
+
 
 def test_generate_presigned_url_exception():
     with patch("app.infrastructure.s3.boto3.client") as mock_boto3_client:
