@@ -1,1 +1,3 @@
-# Database configuration, connection and models.
+"""
+Database configuration, connection and models.
+"""
