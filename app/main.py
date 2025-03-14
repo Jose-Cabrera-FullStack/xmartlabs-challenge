@@ -14,10 +14,12 @@ app = FastAPI(
 
 app.include_router(restful_endpoints.router)
 
+
 @app.on_event("startup")
 async def startup():
     if not database.is_connected:
         await database.connect()
+
 
 @app.on_event("shutdown")
 async def shutdown():
