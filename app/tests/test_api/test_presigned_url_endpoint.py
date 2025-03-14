@@ -10,8 +10,8 @@ def test_create_presigned_url_endpoint():
         mock_create_presigned_url.return_value = {"url": "mocked_url", "fields": {"key": "mocked_key"}}
         response = client.post(
             "/presigned-url",
-            json={"filename": "test.jpg", "content_type": "image/jpeg", "file_size": 1024}
+            json={"filename": "test.jpg", "type": "image", "file_size": 1024}
         )
         assert response.status_code == 200
         assert response.json() == {"url": "mocked_url", "fields": {"key": "mocked_key"}}
-        mock_create_presigned_url.assert_called_once_with("test.jpg", "image/jpeg", 1024)
+        mock_create_presigned_url.assert_called_once_with("test.jpg", "image", 1024)

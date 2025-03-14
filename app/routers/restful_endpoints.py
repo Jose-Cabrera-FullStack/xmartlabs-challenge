@@ -9,11 +9,11 @@ router = APIRouter()
 async def create_presigned_url(request: PresignedURLRequest) -> dict:
     """
     Create a presigned URL for uploading a file to S3.
-    Receives filename, content type, and file size.
+    Receives filename, type, and file size.
     """
     try:
         response = PresignedURLService.create_presigned_url(
-            request.filename, request.content_type, request.file_size
+            request.filename, request.type, request.file_size
         )
         return response
     except Exception as e:

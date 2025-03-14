@@ -11,10 +11,18 @@ class PresignedURLService:
     """
 
     @staticmethod
-    def create_presigned_url(filename: str, content_type: str, file_size: int) -> dict:
+    def create_presigned_url(filename: str, type: str, file_size: int) -> dict:
         """
         Create a presigned URL for uploading a file to S3.
         """
+        # Mapeo de tipos a content_type para S3
+        content_type_mapping = {
+            "image": "image/jpeg",
+            "video": "video/mp4"
+        }
+        
+        content_type = content_type_mapping.get(type)
+        
         try:
             response = generate_presigned_url(
                 bucket_name=settings.s3_bucket_name,
