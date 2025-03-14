@@ -1,1 +1,2 @@
 from app.schemas.request.presigned_url_request import PresignedURLRequest
+from app.schemas.request.update_file_status_request import UpdateFileStatusRequest
