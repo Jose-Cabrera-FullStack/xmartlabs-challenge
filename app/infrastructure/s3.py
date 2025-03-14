@@ -1,6 +1,7 @@
 from typing import Dict
 
-import boto3
+from app.infrastructure.aws import get_s3_client
+
 
 def generate_presigned_url(
     bucket_name: str, key: str, content_type: str, file_size: int, region: str
@@ -8,7 +9,7 @@ def generate_presigned_url(
     """
     Generate a presigned URL for uploading a file to S3.
     """
-    s3_client = boto3.client("s3", region_name=region)
+    s3_client = get_s3_client(region_name=region)
     one_hour = 3600
     try:
         response = s3_client.generate_presigned_post(
