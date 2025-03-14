@@ -4,21 +4,23 @@ from app.service.presigned_url import PresignedURLService
 from app.service.file_storage import FileStorageService
 from app.schemas.request import PresignedURLRequest, UpdateFileStatusRequest
 from app.schemas.response.update_file_status_response import UpdateFileStatusResponse
+from app.schemas.response.presigned_url_response import PresignedURLResponse
 
 router = APIRouter()
 
 
-@router.post("/presigned-url")
-async def create_presigned_url(request: PresignedURLRequest) -> dict:
+@router.post("/presigned-url", response_model=PresignedURLResponse)
+async def create_presigned_url(request: PresignedURLRequest) -> PresignedURLResponse:
     """
     Create a presigned URL for uploading a file to S3.
     Receives filename, type, and file size.
+    Returns the URL, file key (UUID), and status.
     """
     try:
-        presigned_url = PresignedURLService.create_presigned_url(
+        response = await PresignedURLService.create_presigned_url(
             request.filename, request.type, request.file_size
         )
-        return presigned_url
+        return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

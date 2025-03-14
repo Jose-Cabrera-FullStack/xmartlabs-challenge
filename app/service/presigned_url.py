@@ -1,8 +1,6 @@
-"""
-
-"""
 from app.infrastructure.s3 import generate_presigned_url
 from app.settings import settings
+from app.database.models import FileStorage, FileStatus
 
 
 class PresignedURLService:
@@ -11,9 +9,9 @@ class PresignedURLService:
     """
 
     @staticmethod
-    def create_presigned_url(filename: str, type: str, file_size: int) -> dict:
+    async def create_presigned_url(filename: str, type: str, file_size: int) -> dict:
         """
-        Create a presigned URL for uploading a file to S3.
+        Create a presigned URL for uploading a file to S3 and record in database.
         """
         content_type_mapping = {
             "image": "image/jpeg",
@@ -23,13 +21,25 @@ class PresignedURLService:
         content_type = content_type_mapping.get(type)
 
         try:
-            response = generate_presigned_url(
+            file_storage = await FileStorage.objects.create(
+                name=filename,
+                type=type,
+                size=file_size,
+                status=FileStatus.PENDING
+            )
+
+            presigned_response = generate_presigned_url(
                 bucket_name=settings.s3_bucket_name,
                 key=filename,
                 content_type=content_type,
                 file_size=file_size,
                 region=settings.s3_region,
             )
-            return response
+
+            return {
+                "url": presigned_response["url"],
+                "key": file_storage.uuid,
+                "status": file_storage.status
+            }
         except Exception as e:
             raise e
