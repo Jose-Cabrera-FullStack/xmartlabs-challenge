@@ -3,10 +3,32 @@ from typing import Optional
 
 from ormar import NoMatch
 
-from app.database.models import FileStorage
+from app.database.models import FileStorage, FileStatus
 
 
 class FileStorageRepository:
+
+    @staticmethod
+    async def create_file(name: str, type: str, size: int, status: str = FileStatus.PENDING) -> FileStorage:
+        """
+        Create a new file record in the database.
+
+        Args:
+            name: The name of the file
+            type: The type of the file (e.g., 'image', 'video')
+            size: The size of the file in bytes
+            status: The initial status of the file (default: PENDING)
+
+        Returns:
+            The created FileStorage object
+        """
+        file_storage = await FileStorage.objects.create(
+            name=name,
+            type=type,
+            size=size,
+            status=status
+        )
+        return file_storage
 
     @staticmethod
     def update_file_status(uuid: str, status: str) -> Optional[FileStorage]:

@@ -1,6 +1,6 @@
 from app.infrastructure.s3 import generate_presigned_url
 from app.settings import settings
-from app.database.models import FileStorage, FileStatus
+from app.repository.file_storage_repository import FileStorageRepository
 
 
 class PresignedURLService:
@@ -21,11 +21,10 @@ class PresignedURLService:
         content_type = content_type_mapping.get(type)
 
         try:
-            file_storage = await FileStorage.objects.create(
+            file_storage = await FileStorageRepository.create_file(
                 name=filename,
                 type=type,
-                size=file_size,
-                status=FileStatus.PENDING
+                size=file_size
             )
 
             presigned_response = generate_presigned_url(
