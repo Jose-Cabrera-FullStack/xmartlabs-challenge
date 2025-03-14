@@ -1,13 +1,14 @@
 from pydantic import BaseModel, validator
 
+
 class PresignedURLRequest(BaseModel):
     filename: str
-    type: str  # Cambiado de content_type a type
+    type: str
     file_size: int
 
     @validator('filename')
     def validate_filename(cls, filename):
-        if not "." in filename:
+        if "." not in filename:
             raise ValueError('filename must include a file extension')
         return filename
 

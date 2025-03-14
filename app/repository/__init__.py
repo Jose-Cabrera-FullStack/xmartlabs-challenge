@@ -1,1 +1,1 @@
-from app.repository.file_storage import *
+from app.repository.file_storage_repository import *
