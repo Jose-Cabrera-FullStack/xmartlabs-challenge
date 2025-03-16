@@ -7,6 +7,12 @@ from app.database.models import FileStorage, FileStatus
 
 
 class FileStorageRepository:
+    """
+    Repository for handling file storage operations in the database.
+
+    This class provides static methods to interact with the FileStorage model,
+    including creating new file records and updating their statuses.
+    """
 
     @staticmethod
     async def create_file(name: str, type: str, size: int, status: str = FileStatus.PENDING) -> FileStorage:

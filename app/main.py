@@ -6,8 +6,8 @@ from app.routers import restful_endpoints
 API_VERSION = "v1"
 
 app = FastAPI(
-    title="API Name",
-    description="API description",
+    title="Xmartlabs API - Uploading Big Files",
+    description="This API provides endpoints to upload big files to S3 using presigned URLs.",
     version=API_VERSION,
     docs_url="/",
 )

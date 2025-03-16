@@ -21,6 +21,7 @@ class PresignedURLRequest(BaseModel):
 
     @validator('file_size')
     def validate_file_size(cls, file_size):
+        # TODO: Validar que no tiene mas de 5 GB 
         if file_size <= 0:
             raise ValueError('file_size must be a positive integer')
         return file_size
