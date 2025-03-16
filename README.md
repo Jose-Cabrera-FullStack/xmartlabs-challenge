@@ -1,14 +1,12 @@
-# Payment Service
+# S3 File Upload Service
 
 
 ## Description
-`payment-service` is a Python-based API project built using FastAPI, a high-performance web framework for creating RESTful APIs.
+`s3-upload-service` is a Python-based API project built using FastAPI, a high-performance web framework for creating RESTful APIs.
 
-This project provides a solid foundation and structure to develop scalable and maintainable APIs.
+This service implements a mechanism for clients to obtain pre-signed URLs from the backend to upload files directly to Amazon S3, eliminating the need for direct file uploads through the backend. This approach significantly reduces server resource usage and improves system scalability.
 
-The service is specifically designed for the integration between Paracas and **ASBANC/BCP** to manage and process client debts and payments. It implements key principles of **Clean Architecture**, **Hexagonal architecture**, **SOLID principles**, and **Onion architecture** to ensure a robust and flexible design.
-
-The service handles critical operations like debt validation, status checks, payment processing, and payment reversal, aimed at enhancing operational efficiency and security in the financial interactions of the Paracas system.
+The service follows key principles of **Clean Architecture**, **Hexagonal Architecture**, and **SOLID principles** to ensure a robust and flexible design.
 
 ## Endpoints
 
@@ -16,159 +14,117 @@ The service provides the following endpoints:
 
 ```python
 /: Return the Swagger UI documentation.
-/v1/debt-status: Return the status of a debt.
-/v1/update-debt-payment: Update the payment status of a debt.
-/v1/revert-debt-payment: Revert the payment status of a debt.
+/presigned-url: Create a pre-signed URL for uploading a file to S3.
+/file-status: Update the status of a file after it has been uploaded.
 ```
 
+## Running the Service
 
-## Installation
+This project includes a Makefile with useful commands to simplify development and operation tasks:
 
-```
-python3 -m venv venv
-source venv/bin/activate
-# source venv/Scripts/activate - Windows
-pip install -r requirements.txt
-```
+### Start the service
 
-## Environment Variables
-
-The project uses environment variables to configure the application. The environment variables are loaded from a `.env` file located in the root directory of the project. Use the `.env.example` file as a template to create your own `.env` file.
+To build and start the service using Docker:
 
 ```bash
-# .env
-DATABASE_URL=postgresql://paracas:paracas2024@db:5432/payment_service
-...
+make run
 ```
 
-## Docker: Run Project
-
-### Run build container
-
-```bash
-docker build -f docker/Dockerfile.dev -t payment-service .
-```
-
-### Run  the container
-
-```bash
-docker-compose -f docker/docker-compose.yml up --force-recreate --build
-
-# check sql container
-docker-compose -f docker/docker-compose.yml exec db psql --username=postgres --dbname=payment # env variables
-```
-
-With the **docker-compose** configuration, this generate a API endpoint in the port 8000. You can access to the API in the following URL: http://localhost:8000
-
-### Migrations
-
-The project uses Alembic to manage database migrations. Alembic is a lightweight database migration tool for SQLAlchemy.
-
-```bash
-Terminal 1:
-docker-compose -f docker/docker-compose.yml up
-
-Terminal 2:
-docker-compose -f docker/docker-compose.yml exec app bash
-
-#Apply migration
-alembic upgrade head
-
-# Note: To create a migration runs this command
-#Generate migration
-alembic revision --autogenerate -m "migration message"
-
-```
-***Note**: If it is the first migration, you have to excecute every migration sequentialy*
-
-```bash
-Example:
-
-docker-compose -f docker/docker-compose.yml exec app bash
-alembic upgrade b1b4b618e741
-alembic upgrade populate_fake_data
-alembic upgrade 84bd8da3e3bd
-```
-***Note**: If you only want to run the migrations, you can use the following command*
-
-```bash
-docker-compose -f docker/docker-compose.yml exec app alembic upgrade head
-```
-
-The project uses a PostgreSQL database. You can access the database using the following command:
-
-```bash
-docker-compose -f docker/docker-compose.yml exec db psql --username=paracas --dbname=payment_service
-```
-
-### Access PgAdmin
-
-Pre-requisitos:
-- The PgAdmin service must be configured in the docker-compose file
-
-Open your web browser and navigate to:
-- http://localhost:5050
-
-Use the configured credentials to log in:
-- User: `admin@admin.com`
-- Pass: `admin`
-
-Create a new connection:
-- Server name/address: `db` (Service name in docker-compose file)
-- Port: 5432
-- Database name: `payment_service`
-- Enter database connection credentials
+This command will build and start all necessary containers defined in the docker-compose.yml file. The API will be accessible at http://localhost:8000.
 
 ### Run tests
 
-```bash
-Terminal 1:
-docker-compose -f docker/docker-compose.yml up
+To run the test suite:
 
-Terminal 2:
-docker-compose -f docker/docker-compose.yml exec app bash
-python -m pytest --cov=app --cov-report=term --cov-config=.coveragerc
+```bash
+make test
 ```
+
+This executes pytest within the app container to run all tests.
+
+### Database migrations
+
+To create a new migration:
+
+```bash
+make add-migration
+```
+
+You'll be prompted to enter a name for the migration, which should briefly describe the changes.
+
+To apply all pending migrations:
+
+```bash
+make migrate
+```
+
+This will run all unapplied migrations to bring your database schema up to date.
+
+### Environment Variables
+
+The service requires several environment variables which should be defined in a `.env` file:
 
 ## Project Structure
 ```bash
-fast-api-base
-├─ .gitignore
+Xmartlabs
+├─ alembic
+│  ├─ alembic.ini
+│  ...
+├─ alembic.ini
 ├─ app
-│  ├─ adapter
-│  │  ├─ async_tasks.py
-│  │  └─ __init__.py
 │  ├─ database
+│  │  ├─ config.py
+│  │  ├─ models.py
 │  │  └─ __init__.py
 │  ├─ domain
 │  │  └─ __init__.py
+│  ├─ exceptions
+│  │  └─ custom_exception.py
 │  ├─ infrastructure
+│  │  ├─ aws.py
+│  │  ├─ s3.py
 │  │  └─ __init__.py
 │  ├─ main.py
+│  ├─ repository
+│  │  ├─ file_storage_repository.py
+│  │  └─ __init__.py
+│  ├─ routers
+│  │  └─ restful_endpoints.py
 │  ├─ schemas
-│  │  ├─ request.py
-│  │  └─ response.py
+│  │  ├─ request
+│  │  │  ├─ presigned_url_request.py
+│  │  │  ├─ update_file_status_request.py
+│  │  │  └─ __init__.py
+│  │  └─ response
+│  │     ├─ presigned_url_response.**py**
+│  │     ├─ update_file_status_response.py
+│  │     └─ __init__.py
 │  ├─ service
+│  │  ├─ file_storage.py
+│  │  ├─ presigned_url.py
 │  │  └─ __init__.py
 │  ├─ settings.py
 │  ├─ tests
-│  │  ├─ test_app.py
-│  │  └─ __init__.py
+│  │  ├─ ...
 │  └─ utils
-│     ├─ custom_http_response.py
+│     ├─ constants.py
 │     └─ tools.py
-├─ scripts
-│  └─ extract_openapi.py
 ├─ docker
-│  └─ docker-compose.yml
-│  └─ Dockerfile.dev
-│  └─ Dockerfile.prod
-│  └─ .dockerignore
+│  ├─ .dockerignore
+│  ├─ docker-compose.yml
+│  ├─ Dockerfile.dev
+│  ├─ Dockerfile.prod
+│  └─ entrypoint.sh
+├─ Makefile
+├─ pylintrc
 ├─ pytest.ini
 ├─ README.md
 ├─ requirements.txt
-├─ start-container.sh
-└─ supervisord.conf
+├─ scripts
+│  ├─ ipython.py
+│  └─ __init__.py
+└─ setup.cfg
+
 ```
 
 ## Scaffolding and Architecture
