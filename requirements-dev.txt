@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# Dependencias de desarrollo
+pytest==7.3.1
+pytest-asyncio==0.23.8
+pytest-cov==6.0.0
+ipython==8.31.0

@@ -19,7 +19,7 @@ class UpdateFileStatusRequest(BaseModel):
         if status not in valid_statuses:
             raise ValueError(f'status must be one of {valid_statuses}')
         return status
-    
+
     class Config:
         schema_extra = {
             "example": {
