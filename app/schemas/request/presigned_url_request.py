@@ -30,3 +30,12 @@ class PresignedURLRequest(BaseModel):
         if file_size <= 0:
             raise ValueError('file_size must be a positive integer')
         return file_size
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "filename": "vacation_photo.jpg",
+                "type": "image",
+                "file_size": 2097152
+            }
+        }
