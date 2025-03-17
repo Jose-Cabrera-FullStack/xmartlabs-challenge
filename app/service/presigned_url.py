@@ -30,7 +30,7 @@ class PresignedURLService:
             presigned_response = generate_presigned_url(
                 bucket_name=settings.s3_bucket_name,
                 key=filename,
-                content_type=content_type,
+                content_type=content_type or "",
                 file_size=file_size,
                 region=settings.s3_region,
             )

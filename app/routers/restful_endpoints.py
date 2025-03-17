@@ -20,7 +20,7 @@ async def create_presigned_url(request: PresignedURLRequest) -> PresignedURLResp
         response = await PresignedURLService.create_presigned_url(
             request.filename, request.type, request.file_size
         )
-        return response
+        return PresignedURLResponse(**response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
